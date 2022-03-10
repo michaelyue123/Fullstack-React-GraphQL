@@ -1,23 +1,35 @@
-import "reflect-metadata";
-import { UserResolver } from "./resolvers/user";
-import { PostResolver } from "./resolvers/post";
-import { MikroORM } from "@mikro-orm/core";
-import { COOKIE_NAME, __prod__ } from "./constants";
-import microConfig from "./mikro-orm.config";
-import express from "express";
+import { Updoot } from "./entities/Updoot";
 import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
-import cors from "cors";
-import Redis from "ioredis";
-
-import session from "express-session";
 import connectRedis from "connect-redis";
+import cors from "cors";
+import express from "express";
+import session from "express-session";
+import Redis from "ioredis";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { COOKIE_NAME, __prod__ } from "./constants";
+import { Post } from "./entities/Post";
+import { User } from "./entities/User";
+import { PostResolver } from "./resolvers/post";
+import { UserResolver } from "./resolvers/user";
+import path from "path";
 
 const main = async () => {
-  const orm = await MikroORM.init(microConfig);
-  await orm.getMigrator().up();
+  const conn = await createConnection({
+    type: "postgres",
+    database: "lireddit2",
+    username: "postgres",
+    password: "postgres",
+    logging: true,
+    synchronize: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
+    entities: [Post, User, Updoot],
+  });
+  conn;
+  // await conn.runMigrations();
 
+  // await Post.delete({});
   const app = express();
 
   // ioredis
@@ -49,10 +61,10 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ em: orm.em, req, res, redis }),
+    context: ({ req, res }) => ({ req, res, redis }),
   });
 
   apolloServer.applyMiddleware({
