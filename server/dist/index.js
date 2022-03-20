@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const createUpdootLoader_1 = require("./utils/createUpdootLoader");
+const createUserLoader_1 = require("./utils/createUserLoader");
 const Updoot_1 = require("./entities/Updoot");
 const apollo_server_express_1 = require("apollo-server-express");
 const connect_redis_1 = __importDefault(require("connect-redis"));
@@ -40,6 +42,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         entities: [Post_1.Post, User_1.User, Updoot_1.Updoot],
     });
     conn;
+    yield conn.runMigrations();
     const app = (0, express_1.default)();
     const RedisStore = (0, connect_redis_1.default)(express_session_1.default);
     const redis = new ioredis_1.default();
@@ -66,7 +69,13 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             resolvers: [post_1.PostResolver, user_1.UserResolver],
             validate: false,
         }),
-        context: ({ req, res }) => ({ req, res, redis }),
+        context: ({ req, res }) => ({
+            req,
+            res,
+            redis,
+            userLoader: (0, createUserLoader_1.createUserLoader)(),
+            updootLoader: (0, createUpdootLoader_1.createUpdootLoader)(),
+        }),
     });
     apolloServer.applyMiddleware({
         app,

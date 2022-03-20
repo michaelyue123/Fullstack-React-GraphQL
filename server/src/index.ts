@@ -1,3 +1,5 @@
+import { createUpdootLoader } from "./utils/createUpdootLoader";
+import { createUserLoader } from "./utils/createUserLoader";
 import { Updoot } from "./entities/Updoot";
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
@@ -27,8 +29,9 @@ const main = async () => {
     entities: [Post, User, Updoot],
   });
   conn;
-  // await conn.runMigrations();
+  await conn.runMigrations();
 
+  // await Updoot.delete({});
   // await Post.delete({});
   const app = express();
 
@@ -64,7 +67,13 @@ const main = async () => {
       resolvers: [PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ req, res, redis }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      userLoader: createUserLoader(),
+      updootLoader: createUpdootLoader(),
+    }),
   });
 
   apolloServer.applyMiddleware({

@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FakePosts1646822532194 = void 0;
-class FakePosts1646822532194 {
+exports.MockPosts1647074851599 = void 0;
+class MockPosts1647074851599 {
     up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            queryRunner.query(`
-        insert into post (title, text, "creatorId", "createdAt") values ('Time of the Wolf, The (Le temps du loup)', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.
+            yield queryRunner.query(`
+      insert into post (title, text, "creatorId", "createdAt") values ('Time of the Wolf, The (Le temps du loup)', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.
 
 Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
 
@@ -329,12 +329,12 @@ insert into post (title, text, "creatorId", "createdAt") values ('Santo vs. las 
 
 Fusce consequat. Nulla nisl. Nunc nisl.', 1, '2022-02-21T10:34:41Z');
 
-        `);
+      `);
         });
     }
     down(_queryRunner) {
         return __awaiter(this, void 0, void 0, function* () { });
     }
 }
-exports.FakePosts1646822532194 = FakePosts1646822532194;
-//# sourceMappingURL=1646822532194-FakePosts.js.map
+exports.MockPosts1647074851599 = MockPosts1647074851599;
+//# sourceMappingURL=1647074851599-MockPosts.js.map

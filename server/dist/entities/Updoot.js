@@ -25,7 +25,6 @@ __decorate([
     __metadata("design:type", Number)
 ], Updoot.prototype, "userId", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => User_1.User),
     (0, typeorm_1.ManyToOne)(() => User_1.User, (user) => user.updoots),
     __metadata("design:type", User_1.User)
 ], Updoot.prototype, "user", void 0);
